@@ -1,7 +1,5 @@
 {
   "dependencies": {
-    "com.de-panther.webxr": "0.16.0-preview",
-    "com.de-panther.webxr-interactions": "0.16.3-preview",
     "com.unity.collab-proxy": "2.0.0",
     "com.unity.feature.development": "1.0.1",
     "com.unity.textmeshpro": "3.0.6",
