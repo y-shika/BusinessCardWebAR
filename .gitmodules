@@ -1,6 +1,6 @@
 [submodule "Assets/ARjs_Unity"]
 	path = Assets/ARjs_Unity
-	url = git://github.com/taylordigital13/ARjs_Unity.git
+	url = git://github.com/y-shika/ARjs_Unity.git
 [submodule "Assets/AR.js-master"]
 	path = Assets/AR.js-master
-	url = git://github.com/jeromeetienne/AR.js.git
+	url = git://github.com/y-shika/AR.js.git
