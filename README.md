@@ -1,6 +1,6 @@
 # BusinessCardWebAR
 
 ## Demo
-https://verdant-croissant-a076e0.netlify.app/
+https://hilarious-froyo-486500.netlify.app
 
 ![HIRO](ReleaseBuild/textures/HIRO.png)
