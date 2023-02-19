@@ -1,0 +1,146 @@
+<!-- BEGIN: Top HTML -->
+<!DOCTYPE html>
+<!-- include aframe -->
+<script src="https://aframe.io/releases/0.9.2/aframe.min.js"></script>
+<!-- include ar.js -->
+<script src="https://cdn.rawgit.com/jeromeetienne/AR.js/1.7.2/aframe/build/aframe-ar.js"></script>
+
+<!-- to load .ply model -->
+<script src="https://rawgit.com/donmccurdy/aframe-extras/v6.0.0/dist/aframe-extras.loaders.min.js"></script>
+
+<!-- END: Top HTML -->
+<!-- BEGIN: Unity Compiled Events -->
+<script>
+var markerFound = 0;
+AFRAME.registerComponent('button', {
+init: function () {
+var elem = document.documentElement;
+var marker = document.querySelector("#marker");
+var fullbutton = document.querySelector("#fullscreen");
+var Cylinder_2 = document.querySelector("#Cylinder_2");
+marker.addEventListener("markerFound", function (evt) {
+markerFound = 1;
+});
+marker.addEventListener("markerLost", function (evt) {
+markerFound = 0;
+});
+open("https://www.google.com");
+Cylinder_2.addEventListener("mousedown", function(evt){
+});
+fullbutton.addEventListener("click", function (evt) {
+                if (fullscreen == 0) {
+                    if (elem.requestFullscreen) {
+                        elem.requestFullscreen();
+                    } else if (elem.mozRequestFullScreen) {
+                        /* Firefox */
+                        elem.mozRequestFullScreen();
+                    } else if (elem.webkitRequestFullscreen) {
+                        /* Chrome, Safari and Opera */
+                        elem.webkitRequestFullscreen();
+                    } else if (elem.msRequestFullscreen) {
+                        /* IE/Edge */
+                        elem.msRequestFullscreen();
+                    }
+                    fullbutton.setAttribute("src", "../exit_fullscreen.png");
+                    fullscreen = 1;
+                } else {
+                    if (document.exitFullscreen) {
+                        document.exitFullscreen();
+                    } else if (document.webkitExitFullscreen) {
+                        document.webkitExitFullscreen();
+                    } else if (document.mozCancelFullScreen) {
+                        document.mozCancelFullScreen();
+                    } else if (document.msExitFullscreen) {
+                        document.msExitFullscreen();
+                    }
+                    fullbutton.setAttribute("src", "../fullscreen.png");
+                    fullscreen = 0;
+                }
+
+            });
+},
+tick: function (totalTime, deltaTime) {
+var dTime = deltaTime / 1000;
+
+if (markerFound == 1) {
+}
+
+function bezierEvaluate(p0, p1, p2, p3, t) {
+                var u = (1 - t);
+                var uu = u * u;
+                var uuu = u * u * u;
+                var tt = t * t;
+                var ttt = t * t * t;
+                //B(t) = (1-t)^3*P0 + 3*(1-t)^2*t*P1 + 3*(1-t)*t^2*P2 + t^3*P3 , 0 < t < 1
+                return (uuu * p0 + 3 * uu * t * p1 + 3 * u * tt * p2 + ttt * p3);
+
+            }
+           function bezierPath(p0, p1, p2, p3, t) {
+                return new THREE.Vector3(
+                    bezierEvaluate(p0.x, p1.x, p2.x, p3.x, t),
+                    bezierEvaluate(p0.y, p1.y, p2.y, p3.y, t),
+                    bezierEvaluate(p0.z, p1.z, p2.z, p3.z, t)
+                );
+            }
+
+        }
+});
+</script>
+<!-- END: Unity Compiled Events -->
+
+<!-- BEGIN: Middle HTML -->
+<body style='margin : 0px; overflow: hidden; font-family: Monospace;'>
+<div style='position: absolute; bottom: 5px; left: 30px; width:100%; text-align: right; z-index: 1;'>
+        <input type="image" id="fullscreen" src="../fullscreen.png" style='position: absolute; bottom: 0px; right: 35px;'>
+        </input>
+    </div>
+<!-- <a-scene embedded arjs='debugUIEnabled: false; sourceType: video; sourceUrl:../../data/videos/headtracking.mp4;'> -->
+    <a-scene embedded arjs='debugUIEnabled: false; sourceType: webcam' vr-mode-ui='enabled: false'>
+    <a-entity id="mouseCursor" cursor="rayOrigin: mouse" raycaster="objects: .intersectable; useWorldCoordinates: true;"></a-entity>
+<!-- END: Middle HTML -->
+
+<!-- BEGIN: Unity Compiled Assets -->
+<a-assets>
+</a-assets>
+<!-- END: Unity Compiled Assets -->
+<!-- BEGIN: Add Image Target (marker) -->
+<a-marker id="marker" preset="hiro" emitevents="true" button>
+<!-- END: Add Image Target (marker) -->
+
+<!-- BEGIN: Unity Compiled Objects -->
+<a-box src="" id="Cube_0" class="intersectable" width="0.1" height="0.1" depth="0.1" position="0.183 0.077 0.323" rotation="0 0 0" color="#FF0000" transparent=False
+animation__cube_0_f0="property: position;  to: 0.183 0.077 0.323; dur: 0; easing: linear; startEvents: mousedown;"
+animation__cube_0_f0="property: rotation;  to: 0 0 0; dur: 0; easing: linear; startEvents: mousedown;"
+animation__cube_0_f0="property: width;  to: 0.1; dur: 0; easing: linear; startEvents: mousedown;"
+animation__cube_0_f0="property: height;  to: 0.1; dur: 0; easing: linear; startEvents: mousedown;"
+animation__cube_0_f0="property: depth;  to: 0.1; dur: 0; easing: linear; startEvents: mousedown;"
+animation__cube_0_f1="property: position; from: 0.183 0.077 0.323; to: -0.055 0.178 0.107; dur: 3000; easing: linear; startEvents: animationcomplete__cube_0_f0;"
+animation__cube_0_f1="property: rotation; from: 0 0 0; to: 0 -312.0336 0; dur: 3000; easing: linear; startEvents: animationcomplete__cube_0_f0;"
+animation__cube_0_f1="property: width; from: 0.1; to: 0.28385; dur: 3000; easing: linear; startEvents: animationcomplete__cube_0_f0;"
+animation__cube_0_f1="property: height; from: 0.1; to: 0.28385; dur: 3000; easing: linear; startEvents: animationcomplete__cube_0_f0;"
+animation__cube_0_f1="property: depth; from: 0.1; to: 0.28385; dur: 3000; easing: linear; startEvents: animationcomplete__cube_0_f0;"
+animation__cube_0_f2="property: position; from: -0.055 0.178 0.107; to: 0.183 0.077 0.323; dur: 3000; easing: linear; startEvents: animationcomplete__cube_0_f1;"
+animation__cube_0_f2="property: rotation; from: 0 -312.0336 0; to: 0 0 0; dur: 3000; easing: linear; startEvents: animationcomplete__cube_0_f1;"
+animation__cube_0_f2="property: width; from: 0.28385; to: 0.1; dur: 3000; easing: linear; startEvents: animationcomplete__cube_0_f1;"
+animation__cube_0_f2="property: height; from: 0.28385; to: 0.1; dur: 3000; easing: linear; startEvents: animationcomplete__cube_0_f1;"
+animation__cube_0_f2="property: depth; from: 0.28385; to: 0.1; dur: 3000; easing: linear; startEvents: animationcomplete__cube_0_f1;"
+></a-box>
+<a-sphere src="textures/HIRO.png" id="Sphere_1" class="intersectable" radius="0.05" position="-0.361 0.07 -0.22" rotation="0 0 0" color="#FFFFFF" transparent=True
+animation__sphere_1_f0= "property: position;  to: -0.361 0.07 -0.22; dur: 0; easing: linear; "
+animation__sphere_1_f0= "property: rotation;  to: 0 0 0; dur: 0; easing: linear; "
+animation__sphere_1_f0= "property: radius;  to: 0.05; dur: 0; easing: linear; "
+animation__sphere_1_f1= "property: position; from: -0.361 0.07 -0.22; to: -0.4412 0.2018 0.4117; dur: 3000; easing: linear; startEvents: animationcomplete__sphere_1_f0, animationcomplete__sphere_1_f2;"
+animation__sphere_1_f1= "property: rotation; from: 0 0 0; to: 0 -139.1898 0; dur: 3000; easing: linear; startEvents: animationcomplete__sphere_1_f0, animationcomplete__sphere_1_f2;"
+animation__sphere_1_f2= "property: position; from: -0.4412 0.2018 0.4117; to: -0.361 0.07 -0.22; dur: 3000; easing: linear; startEvents: animationcomplete__sphere_1_f1;"
+animation__sphere_1_f2= "property: rotation; from: 0 -139.1898 0; to: 0 0 0; dur: 3000; easing: linear; startEvents: animationcomplete__sphere_1_f1;"
+></a-sphere>
+<a-cylinder src="" id="Cylinder_2" class="intersectable" radius="0.05" height="0.126078" position="-0.412 0.0821 0.4529" rotation="0 0 0" color="#FFFFFF" transparent=False
+></a-cylinder>
+<!-- END: Unity Compiled Objects -->
+
+<!-- BEGIN: Bottom HTML -->
+</a-marker>
+        <a-entity camera></a-entity>
+        </a-scene>
+</body>
+</html><!-- END: Bottom HTML -->
