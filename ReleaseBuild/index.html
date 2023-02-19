@@ -1,122 +1,146 @@
+<!-- BEGIN: Top HTML -->
 <!DOCTYPE html>
-<html lang="en-us">
-  <head>
-    <meta charset="utf-8">
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-    <title>Unity WebGL Player | BusinessCardWebAR</title>
-    <link rel="shortcut icon" href="TemplateData/favicon.ico">
-    <link rel="stylesheet" href="TemplateData/style.css">
-  </head>
-  <body>
-    <div id="unity-container" class="unity-desktop">
-      <canvas id="unity-canvas" width=960 height=600 tabindex="-1"></canvas>
-      <div id="unity-loading-bar">
-        <div id="unity-logo"></div>
-        <div id="unity-progress-bar-empty">
-          <div id="unity-progress-bar-full"></div>
-        </div>
-      </div>
-      <div id="unity-warning"> </div>
-      <div id="unity-footer">
-        <div id="unity-webgl-logo"></div>
-        <div id="unity-fullscreen-button"></div>
-        <div id="unity-build-title">BusinessCardWebAR</div>
-      </div>
+<!-- include aframe -->
+<script src="https://aframe.io/releases/0.9.2/aframe.min.js"></script>
+<!-- include ar.js -->
+<script src="https://cdn.rawgit.com/jeromeetienne/AR.js/1.7.2/aframe/build/aframe-ar.js"></script>
+
+<!-- to load .ply model -->
+<script src="https://rawgit.com/donmccurdy/aframe-extras/v6.0.0/dist/aframe-extras.loaders.min.js"></script>
+
+<!-- END: Top HTML -->
+<!-- BEGIN: Unity Compiled Events -->
+<script>
+var markerFound = 0;
+AFRAME.registerComponent('button', {
+init: function () {
+var elem = document.documentElement;
+var marker = document.querySelector("#marker");
+var fullbutton = document.querySelector("#fullscreen");
+var Cylinder_2 = document.querySelector("#Cylinder_2");
+marker.addEventListener("markerFound", function (evt) {
+markerFound = 1;
+});
+marker.addEventListener("markerLost", function (evt) {
+markerFound = 0;
+});
+open("https://www.google.com");
+Cylinder_2.addEventListener("mousedown", function(evt){
+});
+fullbutton.addEventListener("click", function (evt) {
+                if (fullscreen == 0) {
+                    if (elem.requestFullscreen) {
+                        elem.requestFullscreen();
+                    } else if (elem.mozRequestFullScreen) {
+                        /* Firefox */
+                        elem.mozRequestFullScreen();
+                    } else if (elem.webkitRequestFullscreen) {
+                        /* Chrome, Safari and Opera */
+                        elem.webkitRequestFullscreen();
+                    } else if (elem.msRequestFullscreen) {
+                        /* IE/Edge */
+                        elem.msRequestFullscreen();
+                    }
+                    fullbutton.setAttribute("src", "../exit_fullscreen.png");
+                    fullscreen = 1;
+                } else {
+                    if (document.exitFullscreen) {
+                        document.exitFullscreen();
+                    } else if (document.webkitExitFullscreen) {
+                        document.webkitExitFullscreen();
+                    } else if (document.mozCancelFullScreen) {
+                        document.mozCancelFullScreen();
+                    } else if (document.msExitFullscreen) {
+                        document.msExitFullscreen();
+                    }
+                    fullbutton.setAttribute("src", "../fullscreen.png");
+                    fullscreen = 0;
+                }
+
+            });
+},
+tick: function (totalTime, deltaTime) {
+var dTime = deltaTime / 1000;
+
+if (markerFound == 1) {
+}
+
+function bezierEvaluate(p0, p1, p2, p3, t) {
+                var u = (1 - t);
+                var uu = u * u;
+                var uuu = u * u * u;
+                var tt = t * t;
+                var ttt = t * t * t;
+                //B(t) = (1-t)^3*P0 + 3*(1-t)^2*t*P1 + 3*(1-t)*t^2*P2 + t^3*P3 , 0 < t < 1
+                return (uuu * p0 + 3 * uu * t * p1 + 3 * u * tt * p2 + ttt * p3);
+
+            }
+           function bezierPath(p0, p1, p2, p3, t) {
+                return new THREE.Vector3(
+                    bezierEvaluate(p0.x, p1.x, p2.x, p3.x, t),
+                    bezierEvaluate(p0.y, p1.y, p2.y, p3.y, t),
+                    bezierEvaluate(p0.z, p1.z, p2.z, p3.z, t)
+                );
+            }
+
+        }
+});
+</script>
+<!-- END: Unity Compiled Events -->
+
+<!-- BEGIN: Middle HTML -->
+<body style='margin : 0px; overflow: hidden; font-family: Monospace;'>
+<div style='position: absolute; bottom: 5px; left: 30px; width:100%; text-align: right; z-index: 1;'>
+        <input type="image" id="fullscreen" src="../fullscreen.png" style='position: absolute; bottom: 0px; right: 35px;'>
+        </input>
     </div>
-    <script>
+<!-- <a-scene embedded arjs='debugUIEnabled: false; sourceType: video; sourceUrl:../../data/videos/headtracking.mp4;'> -->
+    <a-scene embedded arjs='debugUIEnabled: false; sourceType: webcam' vr-mode-ui='enabled: false'>
+    <a-entity id="mouseCursor" cursor="rayOrigin: mouse" raycaster="objects: .intersectable; useWorldCoordinates: true;"></a-entity>
+<!-- END: Middle HTML -->
 
-      var container = document.querySelector("#unity-container");
-      var canvas = document.querySelector("#unity-canvas");
-      var loadingBar = document.querySelector("#unity-loading-bar");
-      var progressBarFull = document.querySelector("#unity-progress-bar-full");
-      var fullscreenButton = document.querySelector("#unity-fullscreen-button");
-      var warningBanner = document.querySelector("#unity-warning");
+<!-- BEGIN: Unity Compiled Assets -->
+<a-assets>
+</a-assets>
+<!-- END: Unity Compiled Assets -->
+<!-- BEGIN: Add Image Target (marker) -->
+<a-marker id="marker" preset="hiro" emitevents="true" button>
+<!-- END: Add Image Target (marker) -->
 
-      // Shows a temporary message banner/ribbon for a few seconds, or
-      // a permanent error message on top of the canvas if type=='error'.
-      // If type=='warning', a yellow highlight color is used.
-      // Modify or remove this function to customize the visually presented
-      // way that non-critical warnings and error messages are presented to the
-      // user.
-      function unityShowBanner(msg, type) {
-        function updateBannerVisibility() {
-          warningBanner.style.display = warningBanner.children.length ? 'block' : 'none';
-        }
-        var div = document.createElement('div');
-        div.innerHTML = msg;
-        warningBanner.appendChild(div);
-        if (type == 'error') div.style = 'background: red; padding: 10px;';
-        else {
-          if (type == 'warning') div.style = 'background: yellow; padding: 10px;';
-          setTimeout(function() {
-            warningBanner.removeChild(div);
-            updateBannerVisibility();
-          }, 5000);
-        }
-        updateBannerVisibility();
-      }
+<!-- BEGIN: Unity Compiled Objects -->
+<a-box src="" id="Cube_0" class="intersectable" width="0.1" height="0.1" depth="0.1" position="0.183 0.077 0.323" rotation="0 0 0" color="#FF0000" transparent=False
+animation__cube_0_f0="property: position;  to: 0.183 0.077 0.323; dur: 0; easing: linear; startEvents: mousedown;"
+animation__cube_0_f0="property: rotation;  to: 0 0 0; dur: 0; easing: linear; startEvents: mousedown;"
+animation__cube_0_f0="property: width;  to: 0.1; dur: 0; easing: linear; startEvents: mousedown;"
+animation__cube_0_f0="property: height;  to: 0.1; dur: 0; easing: linear; startEvents: mousedown;"
+animation__cube_0_f0="property: depth;  to: 0.1; dur: 0; easing: linear; startEvents: mousedown;"
+animation__cube_0_f1="property: position; from: 0.183 0.077 0.323; to: -0.055 0.178 0.107; dur: 3000; easing: linear; startEvents: animationcomplete__cube_0_f0;"
+animation__cube_0_f1="property: rotation; from: 0 0 0; to: 0 -312.0336 0; dur: 3000; easing: linear; startEvents: animationcomplete__cube_0_f0;"
+animation__cube_0_f1="property: width; from: 0.1; to: 0.28385; dur: 3000; easing: linear; startEvents: animationcomplete__cube_0_f0;"
+animation__cube_0_f1="property: height; from: 0.1; to: 0.28385; dur: 3000; easing: linear; startEvents: animationcomplete__cube_0_f0;"
+animation__cube_0_f1="property: depth; from: 0.1; to: 0.28385; dur: 3000; easing: linear; startEvents: animationcomplete__cube_0_f0;"
+animation__cube_0_f2="property: position; from: -0.055 0.178 0.107; to: 0.183 0.077 0.323; dur: 3000; easing: linear; startEvents: animationcomplete__cube_0_f1;"
+animation__cube_0_f2="property: rotation; from: 0 -312.0336 0; to: 0 0 0; dur: 3000; easing: linear; startEvents: animationcomplete__cube_0_f1;"
+animation__cube_0_f2="property: width; from: 0.28385; to: 0.1; dur: 3000; easing: linear; startEvents: animationcomplete__cube_0_f1;"
+animation__cube_0_f2="property: height; from: 0.28385; to: 0.1; dur: 3000; easing: linear; startEvents: animationcomplete__cube_0_f1;"
+animation__cube_0_f2="property: depth; from: 0.28385; to: 0.1; dur: 3000; easing: linear; startEvents: animationcomplete__cube_0_f1;"
+></a-box>
+<a-sphere src="textures/HIRO.png" id="Sphere_1" class="intersectable" radius="0.05" position="-0.361 0.07 -0.22" rotation="0 0 0" color="#FFFFFF" transparent=True
+animation__sphere_1_f0= "property: position;  to: -0.361 0.07 -0.22; dur: 0; easing: linear; "
+animation__sphere_1_f0= "property: rotation;  to: 0 0 0; dur: 0; easing: linear; "
+animation__sphere_1_f0= "property: radius;  to: 0.05; dur: 0; easing: linear; "
+animation__sphere_1_f1= "property: position; from: -0.361 0.07 -0.22; to: -0.4412 0.2018 0.4117; dur: 3000; easing: linear; startEvents: animationcomplete__sphere_1_f0, animationcomplete__sphere_1_f2;"
+animation__sphere_1_f1= "property: rotation; from: 0 0 0; to: 0 -139.1898 0; dur: 3000; easing: linear; startEvents: animationcomplete__sphere_1_f0, animationcomplete__sphere_1_f2;"
+animation__sphere_1_f2= "property: position; from: -0.4412 0.2018 0.4117; to: -0.361 0.07 -0.22; dur: 3000; easing: linear; startEvents: animationcomplete__sphere_1_f1;"
+animation__sphere_1_f2= "property: rotation; from: 0 -139.1898 0; to: 0 0 0; dur: 3000; easing: linear; startEvents: animationcomplete__sphere_1_f1;"
+></a-sphere>
+<a-cylinder src="" id="Cylinder_2" class="intersectable" radius="0.05" height="0.126078" position="-0.412 0.0821 0.4529" rotation="0 0 0" color="#FFFFFF" transparent=False
+></a-cylinder>
+<!-- END: Unity Compiled Objects -->
 
-      var buildUrl = "Build";
-      var loaderUrl = buildUrl + "/ReleaseBuild.loader.js";
-      var config = {
-        dataUrl: buildUrl + "/ReleaseBuild.data",
-        frameworkUrl: buildUrl + "/ReleaseBuild.framework.js",
-        codeUrl: buildUrl + "/ReleaseBuild.wasm",
-        streamingAssetsUrl: "StreamingAssets",
-        companyName: "DefaultCompany",
-        productName: "BusinessCardWebAR",
-        productVersion: "0.1",
-        showBanner: unityShowBanner,
-      };
-
-      // By default Unity keeps WebGL canvas render target size matched with
-      // the DOM size of the canvas element (scaled by window.devicePixelRatio)
-      // Set this to false if you want to decouple this synchronization from
-      // happening inside the engine, and you would instead like to size up
-      // the canvas DOM size and WebGL render target sizes yourself.
-      // config.matchWebGLToCanvasSize = false;
-
-      if (/iPhone|iPad|iPod|Android/i.test(navigator.userAgent)) {
-        // Mobile device style: fill the whole browser client area with the game canvas:
-
-        var meta = document.createElement('meta');
-        meta.name = 'viewport';
-        meta.content = 'width=device-width, height=device-height, initial-scale=1.0, user-scalable=no, shrink-to-fit=yes';
-        document.getElementsByTagName('head')[0].appendChild(meta);
-        container.className = "unity-mobile";
-        canvas.className = "unity-mobile";
-
-        // To lower canvas resolution on mobile devices to gain some
-        // performance, uncomment the following line:
-        // config.devicePixelRatio = 1;
-
-
-      } else {
-        // Desktop style: Render the game canvas in a window that can be maximized to fullscreen:
-
-        canvas.style.width = "960px";
-        canvas.style.height = "600px";
-      }
-
-      loadingBar.style.display = "block";
-
-      var script = document.createElement("script");
-      script.src = loaderUrl;
-      script.onload = () => {
-        createUnityInstance(canvas, config, (progress) => {
-          progressBarFull.style.width = 100 * progress + "%";
-              }).then((unityInstance) => {
-                loadingBar.style.display = "none";
-                fullscreenButton.onclick = () => {
-                  unityInstance.SetFullscreen(1);
-                };
-              }).catch((message) => {
-                alert(message);
-              });
-            };
-
-      document.body.appendChild(script);
-
-    </script>
-  </body>
-</html>
+<!-- BEGIN: Bottom HTML -->
+</a-marker>
+        <a-entity camera></a-entity>
+        </a-scene>
+</body>
+</html><!-- END: Bottom HTML -->
